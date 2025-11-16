@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Temporary Works: Scaffolding, Hoardings, & Site Safety — Technology 3 CONS5103</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Exam-prep website for Technology 3 CONS5103: Temporary Works — Scaffolding, Hoardings, and Site Safety." />
+  <style>
+    :root{
+      --bg:#0e0f14;
+      --panel:#151822;
+      --panel-2:#1a1f2d;
+      --text:#e6e9ef;
+      --muted:#b7c0d6;
+      --accent:#67e8f9;
+      --accent-2:#a78bfa;
+      --accent-3:#22d3ee;
+      --danger:#ff6b6b;
+      --success:#34d399;
+      --warning:#fbbf24;
+      --border:#263043;
+      --focus:#93c5fd;
+      --code:#0b1220;
+      --shadow:0 10px 30px rgba(0,0,0,0.35);
+    }
+    html,body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";}
+    *{box-sizing:border-box}
+    a{color:var(--accent)}
+    .app{
+      max-width:1200px; margin:0 auto; padding:20px;
+    }
+    header{
+      display:flex;gap:16px;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:1000;background:linear-gradient(180deg,rgba(14,15,20,.95),rgba(14,15,20,.75));
+      backdrop-filter:saturate(120%) blur(8px); padding:12px 20px; border-bottom:1px solid var(--border);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:40px;height:40px;border-radius:50%;
+      background:conic-gradient(from 180deg at 50% 50%, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
+      box-shadow:0 0 30px rgba(103,232,249,.25);
+    }
+    .title{font-weight:700;font-size:1.05rem;line-height:1.2}
+    nav{display:flex;flex-wrap:wrap;gap:8px}
+    nav button{
+      background:var(--panel); color:var(--text); border:1px solid var(--border);
+      padding:8px 12px; border-radius:10px; cursor:pointer; transition:.25s ease; font-weight:600;
+    }
+    nav button:hover,nav button:focus{
+      outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(103,232,249,.15)
+    }
+    .section{
+      margin:24px 0; background:linear-gradient(180deg,var(--panel),var(--panel-2));
+      border:1px solid var(--border); border-radius:16px; padding:20px; box-shadow:var(--shadow);
+    }
+    .section h2{
+      margin:0 0 12px; font-size:1.4rem; letter-spacing:.2px
+    }
+    .sub{color:var(--muted); font-size:.95rem}
+    .grid{display:grid;gap:16px}
+    @media (min-width:900px){ .grid.cols-2{grid-template-columns:1fr 1fr} .grid.cols-3{grid-template-columns:repeat(3,1fr)} }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+      background:rgba(103,232,249,.12); border:1px solid rgba(103,232,249,.28); color:var(--accent); font-weight:600; margin-right:8px; margin-bottom:8px;
+    }
+    /* Collapsible notes */
+    details.note{
+      border:1px solid var(--border); border-radius:12px; padding:0; overflow:hidden; background:rgba(26,31,45,.7)
+    }
+    details.note>summary{
+      list-style:none; cursor:pointer; padding:14px 16px; font-weight:700; position:relative;
+    }
+    details.note>summary::marker{display:none}
+    details.note[open] > summary{background:rgba(34,211,238,.08)}
+    .note-body{padding:14px 16px; border-top:1px solid var(--border)}
+    .klist{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .highlight{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.35);padding:8px;border-radius:10px}
+    /* Search */
+    .searchbar{
+      display:flex; gap:12px; flex-wrap:wrap; margin:10px 0 16px;
+    }
+    .searchbar input, .searchbar select{
+      background:var(--code); color:var(--text); border:1px solid var(--border);
+      padding:10px 12px; border-radius:10px; flex:1; min-width:200px;
+    }
+    .searchbar input::placeholder{color:#8aa0bf}
+    /* Mind map */
+    .mindmap{
+      position:relative; min-height:360px; overflow:auto; padding:20px; border-radius:14px; background:radial-gradient(1200px 560px at 10% 0%, rgba(103,232,249,.08), transparent 40%), var(--panel);
+    }
+    .node{
+      position:absolute; min-width:200px; background:var(--panel-2); border:1px solid var(--border);
+      padding:10px 12px; border-radius:12px; box-shadow:var(--shadow); transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .node:hover{transform:translateY(-2px); box-shadow:0 20px 40px rgba(0,0,0,.45)}
+    .node h3{margin:0 0 6px; font-size:1rem}
+    .node .children{margin-top:8px}
+    .node button{
+      background:rgba(34,211,238,.12); border:1px solid rgba(34,211,238,.3); color:var(--accent-3);
+      padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:700;
+    }
+    svg.links{position:absolute; inset:0; pointer-events:none}
+    /* Flashcards */
+    .cards{display:grid; gap:14px}
+    @media (min-width:900px){ .cards{grid-template-columns:repeat(3,1fr)} }
+    .card{
+      perspective:1000px; height:180px; cursor:pointer;
+    }
+    .card-inner{
+      position:relative; width:100%; height:100%; transition:transform .6s; transform-style:preserve-3d;
+    }
+    .card.flip .card-inner{transform:rotateY(180deg)}
+    .card-face{
+      position:absolute; inset:0; backface-visibility:hidden; border:1px solid var(--border); border-radius:12px; padding:16px;
+      display:flex; align-items:center; justify-content:center; text-align:center; box-shadow:var(--shadow);
+    }
+    .front{background:linear-gradient(180deg,rgba(167,139,250,.12),rgba(167,139,250,.05))}
+    .back{background:linear-gradient(180deg,rgba(34,197,94,.12),rgba(34,197,94,.05)); transform:rotateY(180deg)}
+    /* Quiz */
+    .quiz-controls{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px}
+    .btn{
+      background:var(--panel); color:var(--text); border:1px solid var(--border); padding:10px 12px; border-radius:10px;
+      cursor:pointer; transition:.25s ease; font-weight:700;
+    }
+    .btn.primary{background:linear-gradient(180deg,rgba(103,232,249,.18),rgba(103,232,249,.08)); border-color:rgba(103,232,249,.35); color:var(--accent)}
+    .btn.success{background:linear-gradient(180deg,rgba(52,211,153,.18),rgba(52,211,153,.08)); border-color:rgba(52,211,153,.35); color:var(--success)}
+    .btn.warn{background:linear-gradient(180deg,rgba(251,191,36,.18),rgba(251,191,36,.08)); border-color:rgba(251,191,36,.35); color:var(--warning)}
+    .btn:hover,.btn:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(103,232,249,.15)}
+    .question{border:1px solid var(--border); border-radius:12px; padding:14px; background:var(--panel-2); margin-bottom:12px}
+    .question h4{margin:0 0 8px}
+    .options{display:grid; gap:8px}
+    .opt{
+      display:flex; align-items:flex-start; gap:10px; padding:10px; background:rgba(26,31,45,.6); border:1px solid var(--border);
+      border-radius:10px; cursor:pointer;
+    }
+    .opt input{margin-top:2px}
+    .explain{margin-top:8px; color:var(--muted)}
+    .scoreline{display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:10px}
+    .progressbar{height:10px; background:#10141f; border:1px solid var(--border); border-radius:999px; overflow:hidden; flex:1; min-width:200px}
+    .progressbar > div{height:100%; background:linear-gradient(90deg,var(--accent), var(--accent-2)); width:0%}
+    /* Cheat sheet */
+    .cheat{
+      display:grid; gap:12px
+    }
+    @media (min-width:900px){ .cheat{grid-template-columns:repeat(2,1fr)} }
+    .cheat .block{border:1px solid var(--border); border-radius:12px; padding:14px; background:var(--panel-2)}
+    .cheat h3{margin:0 0 8px; font-size:1.05rem}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    /* Image/diagram placeholders (SVG) */
+    .diagram{background:var(--code); border:1px solid var(--border); border-radius:12px; padding:8px}
+    /* Accessibility */
+    .skip-link{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden}
+    .skip-link:focus{position:static; width:auto; height:auto; padding:8px 10px; background:#111827; border:1px solid var(--accent); border-radius:8px}
+    /* Print cheat sheet only */
+    @media print{
+      body{background:#fff;color:#000}
+      header, .section:not(#cheatsheet), nav, .skip-link{display:none !important}
+      #cheatsheet{display:block !important; border:none; box-shadow:none}
+      #cheatsheet *{color:#000 !important; background:#fff !important; border-color:#000 !important}
+    }
+    /* Focus ring for keyboard */
+    :focus-visible{outline:3px solid var(--focus); outline-offset:2px; border-radius:8px}
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#learning">Skip to learning content</a>
+<header role="banner" aria-label="Site header">
+  <div class="brand" aria-label="Brand">
+    <div class="logo" aria-hidden="true"></div>
+    <div class="title">
+      Temporary Works: Scaffolding, Hoardings, & Site Safety
+      <div class="sub">Technology 3 CONS5103 — Dark theme, responsive, accessible</div>
+    </div>
+  </div>
+  <nav role="navigation" aria-label="Primary">
+    <button data-jump="#learning">Learning</button>
+    <button data-jump="#mindmap">Mind map</button>
+    <button data-jump="#flashcards">Flashcards</button>
+    <button data-jump="#quiz">MCQ quiz</button>
+    <button data-jump="#cheatsheet">Cheat sheet</button>
+  </nav>
+</header>
+
+<main class="app" id="app" role="main">
+  <!-- Learning Section -->
+  <section class="section" id="learning" aria-labelledby="learning-title">
+    <h2 id="learning-title">Learning section with interactive notes</h2>
+    <p class="sub">Collapsible notes, keyword tags, search, and animated concept diagrams for scaffolding, hoardings, and site safety.</p>
+
+    <div class="searchbar" role="search" aria-label="Search notes">
+      <input id="searchInput" type="search" placeholder="Search notes, keywords, legislation (e.g., F4, F5, hoardings, scaffold ties)..." aria-label="Search text" />
+      <select id="tagSelect" aria-label="Filter by keyword">
+        <option value="">Filter by keyword tag...</option>
+        <option>Scaffolding</option>
+        <option>Hoardings</option>
+        <option>Barriers</option>
+        <option>Site Safety</option>
+        <option>Legislation F4</option>
+        <option>Legislation F5</option>
+        <option>Certificate of Public Use</option>
+        <option>Inspections</option>
+        <option>PPE</option>
+        <option>Noise Control</option>
+        <option>Bracing</option>
+        <option>Access</option>
+        <option>Electrical Proximity</option>
+      </select>
+      <button class="btn primary" id="clearFilters" aria-label="Clear filters">Clear filters</button>
+    </div>
+
+    <div class="grid cols-2" id="notesContainer" aria-live="polite">
+      <!-- Note 1: Hoardings -->
+      <details class="note" data-tags="Hoardings,Barriers,Legislation F5" open>
+        <summary>Hoardings: function, materials, and NZBC F5 acceptable solutions</summary>
+        <div class="note-body">
+          <ul>
+            <li><strong>Function:</strong> Prevent public access, improve safety, provide security, reduce dust and noise.</li>
+            <li><strong>Side vs overhead:</strong> Hoardings provide side protection; gantries add overhead protection.</li>
+            <li><strong>Materials:</strong> Chain-link (50×50 mm max grid), timber palings, exterior plywood, continuous metal cladding.</li>
+            <li><strong>Heights & gaps:</strong> Minimum height 2.0 m; bottom gap ≤ 100 mm; post spacing ≤ 2.5 m.</li>
+            <li><strong>Cladding options:</strong> Close-butted timber ≥ 19 mm; 6.0 mm ply @ ≤ 600 mm studs; 9.5 mm ply @ ≤ 1000 mm studs; or equivalent metal cladding.</li>
+          </ul>
+          <div class="klist">
+            <span class="pill">Hoardings</span><span class="pill">Barriers</span><span class="pill">Legislation F5</span>
+          </div>
+          <div class="highlight">Tip: Use hoardings with sound barriers where resource consent requires noise attenuation near public areas.</div>
+          <div class="diagram" aria-label="Hoarding concept diagram">
+            <!-- Simple explanatory SVG diagram -->
+            <svg width="100%" height="140" viewBox="0 0 600 140" role="img" aria-label="Hoarding beside public footpath">
+              <rect x="0" y="0" width="600" height="140" fill="#0b1220"/>
+              <rect x="40" y="30" width="520" height="80" rx="8" fill="#1f2937" stroke="#263043"/>
+              <rect x="60" y="40" width="200" height="60" rx="6" fill="#172032" stroke="#2b3b55"/>
+              <text x="70" y="65" fill="#67e8f9" font-size="14" font-weight="700">Public Footpath</text>
+              <text x="70" y="85" fill="#b7c0d6" font-size="12">Access zone</text>
+              <rect x="290" y="40" width="250" height="60" rx="6" fill="#111827" stroke="#36435f"/>
+              <text x="300" y="65" fill="#a78bfa" font-size="14" font-weight="700">Hoarding (2.0 m min height)</text>
+              <text x="300" y="85" fill="#b7c0d6" font-size="12">Plywood/Metal/Chain-link</text>
+              <line x1="285" y1="40" x2="285" y2="100" stroke="#22d3ee" stroke-dasharray="5 4"/>
+              <text x="250" y="30" fill="#22d3ee" font-size="12">Site boundary</text>
+            </svg>
+          </div>
+        </div>
+      </details>
+
+      <!-- Note 2: NZBC F4 Safety from falling -->
+      <details class="note" data-tags="Barriers,Legislation F4,Site Safety">
+        <summary>NZBC F4 Safety from Falling: barrier performance and construction</summary>
+        <div class="note-body">
+          <ul>
+            <li><strong>Continuity:</strong> Barriers must extend for full extent of hazard and be of appropriate height and rigidity.</li>
+            <li><strong>Strength:</strong> Withstand foreseeable impact or static pressure of people pressing against them.</li>
+            <li><strong>Temporary site barriers:</strong> Possible fall less than 3 m may have specific provisions.</li>
+            <li><strong>Construction site barriers:</strong> One or more intermediate rails (max 460 mm vertical openings) and toeboard ≥ 225 mm.</li>
+            <li><strong>Edge distance:</strong> Barrier rails ≤ 200 mm horizontally from platform edge.</li>
+          </ul>
+          <div class="klist">
+            <span class="pill">Legislation F4</span><span class="pill">Barriers</span><span class="pill">Site Safety</span>
+          </div>
+          <div class="diagram" aria-label="Barrier anatomy diagram">
+            <svg width="100%" height="140" viewBox="0 0 600 140" role="img">
+              <rect x="0" y="0" width="600" height="140" fill="#0b1220"/>
+              <rect x="80" y="40" width="440" height="60" rx="8" fill="#1f2937" stroke="#263043"/>
+              <line x1="120" y1="50" x2="560" y2="50" stroke="#67e8f9" stroke-width="4"/>
+              <line x1="120" y1="70" x2="560" y2="70" stroke="#a78bfa" stroke-width="3"/>
+              <rect x="120" y="85" width="440" height="12" fill="#34d399"/>
+              <text x="130" y="48" fill="#67e8f9" font-size="12">Top rail (≈ 1000 mm)</text>
+              <text x="130" y="68" fill="#a78bfa" font-size="12">Intermediate rail (≤ 460 mm opening)</text>
+              <text x="130" y="105" fill="#34d399" font-size="12">Toeboard (≥ 225 mm)</text>
+            </svg>
+          </div>
+        </div>
+      </details>
+
+      <!-- Note 3: NZBC F5 Construction & demolition hazards -->
+      <details class="note" data-tags="Legislation F5,Hazard,Barriers,Public Safety">
+        <summary>NZBC F5: construction & demolition hazards and public protections</summary>
+        <div class="note-body">
+          <ul>
+            <li><strong>Objective:</strong> Safeguard people and property from site hazards (falling objects, other hazards, unauthorized child entry).</li>
+            <li><strong>Barriers:</strong> Appropriate height, difficult to climb, limited openings, gates not projecting beyond site, no hazardous projections.</li>
+            <li><strong>Marking:</strong> Clearly marked where barrier itself may present hazard to traffic or passersby.</li>
+            <li><strong>Safe routes:</strong> Provide safe routes under lifting equipment or high-level work (catch screens/gantries).</li>
+          </ul>
+          <div class="klist">
+            <span class="pill">Legislation F5</span><span class="pill">Public Safety</span><span class="pill">Barriers</span>
+          </div>
+        </div>
+      </details>
+
+      <!-- Note 4: Certificate of Public Use -->
+      <details class="note" data-tags="Certificate of Public Use,Site Safety,Operations">
+        <summary>Certificate of Public Use: partial occupation and safety plans</summary>
+        <div class="note-body">
+          <ul>
+            <li><strong>Purpose:</strong> Allow public access before full completion or during renovations to part of a building.</li>
+            <li><strong>Safety Plan:</strong> Submitted to council; details separation of zones and maintaining life safety systems.</li>
+            <li><strong>Systems operational:</strong> Fire alarms, sprinklers, automatic doors, lifts, smoke control, security access, comms, fire separations.</li>
+            <li><strong>Complexity:</strong> Upgrades (e.g., sprinklers, fire alarms) require careful staging and commissioning.</li>
+          </ul>
+          <div class="klist">
+            <span class="pill">Certificate of Public Use</span><span class="pill">Life Safety</span><span class="pill">Operations</span>
+          </div>
+          <div class="diagram" aria-label="Zone segregation diagram">
+            <svg width="100%" height="140" viewBox="0 0 600 140" role="img">
+              <rect x="0" y="0" width="600" height="140" fill="#0b1220"/>
+              <rect x="40" y="30" width="520" height="80" rx="8" fill="#1f2937" stroke="#263043"/>
+              <rect x="50" y="40" width="240" height="60" rx="6" fill="#0f172a" stroke="#2b3b55"/>
+              <text x="60" y="65" fill="#22d3ee" font-size="14" font-weight="700">Public Access Zone</text>
+              <rect x="300" y="40" width="250" height="60" rx="6" fill="#1b263b" stroke="#354766"/>
+              <text x="310" y="65" fill="#fbbf24" font-size="14" font-weight="700">Construction Zone</text>
+              <line x1="295" y1="40" x2="295" y2="100" stroke="#ff6b6b" stroke-dasharray="6 5"/>
+              <text x="250" y="115" fill="#ff6b6b" font-size="12">Hoarding/Gantry Line</text>
+            </svg>
+          </div>
+        </div>
+      </details>
+
+      <!-- Note 5: Scaffolding basics & inspections -->
+      <details class="note" data-tags="Scaffolding,Inspections,Components,Site Safety">
+        <summary>Scaffolding: definitions, components, safe working, and inspection register</summary>
+        <div class="note-body">
+          <ul>
+            <li><strong>Definition:</strong> Temporary frameworks for supporting workers/materials (advanced/basic/suspended). Includes planks, couplers, fittings.</li>
+            <li><strong>Components:</strong> Standards, ledgers, transoms/putlogs, guardrails, midrails, toeboards, braces, baseplates/soleboards.</li>
+            <li><strong>Inspections:</strong> Weekly for scaffolds ≥ 5 m and after events impacting safety; scaffold register kept on site.</li>
+            <li><strong>Duty ratings:</strong> Light (225 kg), Medium (450 kg), Heavy (675 kg), Special (designer-specified SWL).</li>
+            <li><strong>Access:</strong> Ladders/stair towers; headroom 1.8–2.1 m; first lift up to 3.0 m; ties every second lift; bracing at 40–50°.</li>
+          </ul>
+          <div class="klist">
+            <span class="pill">Scaffolding</span><span class="pill">Inspections</span><span class="pill">Components</span><span class="pill">Access</span>
+          </div>
+          <div class="diagram" aria-label="Scaffold component diagram (simplified)">
+            <svg width="100%" height="160" viewBox="0 0 600 160" role="img">
+              <rect x="0" y="0" width="600" height="160" fill="#0b1220"/>
+              <!-- Standards -->
+              <rect x="150" y="30" width="8" height="90" fill="#3b82f6"/>
+              <rect x="320" y="30" width="8" height="90" fill="#3b82f6"/>
+              <!-- Ledgers -->
+              <rect x="158" y="40" width="162" height="6" fill="#67e8f9"/>
+              <rect x="158" y="80" width="162" height="6" fill="#67e8f9"/>
+              <!-- Transoms -->
+              <rect x="200" y="40" width="6" height="46" fill="#a78bfa"/>
+              <rect x="260" y="40" width="6" height="46" fill="#a78bfa"/>
+              <!-- Platform -->
+              <rect x="158" y="46" width="162" height="34" fill="#1f2937" stroke="#263043"/>
+              <text x="168" y="60" fill="#b7c0d6" font-size="12">Platform boards</text>
+              <!-- Rails -->
+              <rect x="158" y="35" width="162" height="4" fill="#22d3ee"/>
+              <rect x="158" y="74" width="162" height="4" fill="#22d3ee"/>
+              <!-- Toeboard -->
+              <rect x="158" y="84" width="162" height="6" fill="#34d399"/>
+              <!-- Brace -->
+              <line x1="150" y1="120" x2="320" y2="60" stroke="#fbbf24" stroke-width="3"/>
+              <text x="336" y="44" fill="#67e8f9" font-size="12">Ledger</text>
+              <text x="330" y="90" fill="#a78bfa" font-size="12">Transom/Putlog</text>
+              <text x="136" y="28" fill="#3b82f6" font-size="12">Standard</text>
+              <text x="158" y="100" fill="#34d399" font-size="12">Toeboard</text>
+            </svg>
+          </div>
+        </div>
+      </details>
+
+      <!-- Note 6: Noise attenuation and barriers -->
+      <details class="note" data-tags="Noise Control,Hoardings,Barriers,Site Safety">
+        <summary>Noise attenuation: sound curtains, panels, and public protection</summary>
+        <div class="note-body">
+          <ul>
+            <li><strong>Resource consent:</strong> May require temporary sound barriers to protect neighbors and the public.</li>
+            <li><strong>Solutions:</strong> Soundproof curtains, E-wall panels (lightweight, good acoustic properties, recyclable).</li>
+            <li><strong>Integration:</strong> Combine hoardings and noise barriers in buildings open to the public during construction.</li>
+          </ul>
+          <div class="klist">
+            <span class="pill">Noise Control</span><span class="pill">Hoardings</span><span class="pill">Public Protection</span>
+          </div>
+        </div>
+      </details>
+
+      <!-- Note 7: Electrical proximity -->
+      <details class="note" data-tags="Electrical Proximity,Scaffolding,Site Safety">
+        <summary>Electrical proximity: safe distances from overhead power lines</summary>
+        <div class="note-body">
+          <ul>
+            <li><strong>General rule:</strong> Do not erect scaffold within 4 m of overhead lines without written consent (varies by voltage).</li>
+            <li><strong>Distances:</strong> Typical limits increase with voltage (e.g., 110 kV → 4.0 m; 220 kV → 6.0 m).</li>
+            <li><strong>Approval:</strong> Higher voltages (e.g., up to 6 m for 220 kV) cannot be reduced without specific authority constraints.</li>
+          </ul>
+          <div class="klist">
+            <span class="pill">Electrical Proximity</span><span class="pill">Scaffolding</span>
+          </div>
+        </div>
+      </details>
+
+      <!-- Note 8: PPE & Hazard Boards -->
+      <details class="note" data-tags="PPE,Site Safety,Hazard">
+        <summary>Hazard boards & PPE: minimum site protection requirements</summary>
+        <div class="note-body">
+          <ul>
+            <li><strong>Hazard boards:</strong> At entry; list hazards, potential harms, and controls; enforce site access rules.</li>
+            <li><strong>PPE:</strong> Hard hats, safety footwear, fall arrest, gloves, hearing protection; tag electrical equipment.</li>
+            <li><strong>Working at height:</strong> Prefer elimination; otherwise isolate/minimize using group controls (scaffolds, guardrails, nets).</li>
+          </ul>
+          <div class="klist">
+            <span class="pill">PPE</span><span class="pill">Hazard Board</span><span class="pill">Working at Height</span>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Mind Map Section -->
+  <section class="section" id="mindmap" aria-labelledby="mindmap-title">
+    <h2 id="mindmap-title">Mind map</h2>
+    <p class="sub">Explore relationships between Scaffolding, Hoardings & Barriers, Site Safety, NZBC F4/F5, and Certificate of Public Use.</p>
+    <div class="mindmap" id="mindmapCanvas" role="region" aria-label="Interactive mind map">
+      <svg class="links" id="linkSvg" viewBox="0 0 1200 600" preserveAspectRatio="none"></svg>
+      <!-- Root -->
+      <div class="node" id="node-root" style="left: 420px; top: 30px;">
+        <h3>Temporary Works</h3>
+        <p class="sub">Scaffolding • Hoardings • Site Safety</p>
+        <button aria-expanded="true" data-expand="root">Collapse</button>
+        <div class="children"></div>
+      </div>
+      <!-- Scaffolding -->
+      <div class="node" id="node-scaf" style="left: 120px; top: 180px;">
+        <h3>Scaffolding</h3>
+        <p class="sub">Components • Access • Inspections</p>
+        <button aria-expanded="true" data-expand="scaf">Collapse</button>
+        <div class="children">
+          <ul>
+            <li>Standards, ledgers, transoms</li>
+            <li>Guardrails, midrails, toeboards</li>
+            <li>Bracing (40–50°), ties every 2nd lift</li>
+            <li>Headroom 1.8–2.1 m; first lift ≤ 3.0 m</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Hoardings -->
+      <div class="node" id="node-hoard" style="left: 740px; top: 180px;">
+        <h3>Hoardings & Barriers</h3>
+        <p class="sub">Public protection • Gantries • Noise</p>
+        <button aria-expanded="true" data-expand="hoard">Collapse</button>
+        <div class="children">
+          <ul>
+            <li>2.0 m min height; chain-link 50×50 mm</li>
+            <li>Plywood thickness options or metal</li>
+            <li>Gantry for overhead protection</li>
+            <li>Sound curtains / panels</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Site Safety -->
+      <div class="node" id="node-safety" style="left: 420px; top: 320px;">
+        <h3>Site Safety</h3>
+        <p class="sub">Hazard boards • PPE • TWD</p>
+        <button aria-expanded="true" data-expand="safety">Collapse</button>
+        <div class="children">
+          <ul>
+            <li>Hazards: falls, machinery, noise, excavation</li>
+            <li>PPE: helmets, boots, harness, hearing</li>
+            <li>Temporary Works Design & sequencing</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Legislation -->
+      <div class="node" id="node-leg" style="left: 120px; top: 360px;">
+        <h3>NZBC F4 / F5</h3>
+        <p class="sub">Safety from falling • Demolition hazards</p>
+        <button aria-expanded="true" data-expand="leg">Collapse</button>
+        <div class="children">
+          <ul>
+            <li>Barrier continuity, strength, rigidity</li>
+            <li>Prevent climbing; mark hazards</li>
+            <li>Safe routes under lifting/overhead work</li>
+          </ul>
+        </div>
+      </div>
+      <!-- CPU -->
+      <div class="node" id="node-cpu" style="left: 740px; top: 360px;">
+        <h3>Certificate of Public Use</h3>
+        <p class="sub">Partial occupation • Life safety systems</p>
+        <button aria-expanded="true" data-expand="cpu">Collapse</button>
+        <div class="children">
+          <ul>
+            <li>Safety Plan for zone separation</li>
+            <li>Fire alarms, sprinklers, doors, lifts</li>
+            <li>Commissioning before issue</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flashcards Section -->
+  <section class="section" id="flashcards" aria-labelledby="flashcards-title">
+    <h2 id="flashcards-title">Flashcards</h2>
+    <p class="sub">Flip cards for rapid revision. Click/tap to flip.</p>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <!-- MCQ Quiz Section -->
+  <section class="section" id="quiz" aria-labelledby="quiz-title">
+    <h2 id="quiz-title">MCQ quiz (40 questions)</h2>
+    <p class="sub">Four options per question, explanations for correct answers, scoring, progress, randomization, retry & review.</p>
+
+    <div class="scoreline" aria-live="polite">
+      <div><strong>Score:</strong> <span id="score">0</span>/<span id="total">40</span></div>
+      <div><strong>Progress:</strong> <span id="progressText">0%</span></div>
+      <div class="progressbar" aria-label="Quiz progress"><div id="progressBar"></div></div>
+    </div>
+
+    <div class="quiz-controls">
+      <button class="btn primary" id="startQuiz">Start / Shuffle</button>
+      <button class="btn success" id="submitQuiz">Submit</button>
+      <button class="btn warn" id="retryQuiz">Retry</button>
+      <button class="btn" id="reviewQuiz">Review mode</button>
+    </div>
+
+    <div id="questions"></div>
+  </section>
+
+  <!-- Cheat Sheet Section -->
+  <section class="section" id="cheatsheet" aria-labelledby="cheatsheet-title">
+    <h2 id="cheatsheet-title">Cheat sheet — quick study</h2>
+    <p class="sub">One-page summary with definitions, dimensions, and key legislation points. Use “Print Cheat Sheet” to export.</p>
+    <div class="quiz-controls">
+      <button class="btn primary" id="printCheat">Print cheat sheet</button>
+    </div>
+
+    <div class="cheat">
+      <div class="block">
+        <h3>Hoardings & barriers</h3>
+        <ul>
+          <li><strong>Purpose:</strong> Prevent public access, enhance safety, reduce dust/noise.</li>
+          <li><strong>Height:</strong> ≥ 2.0 m; bottom gap ≤ 100 mm; posts ≤ 2.5 m spacing.</li>
+          <li><strong>Chain-link:</strong> 50×50 mm max grid.</li>
+          <li><strong>Cladding:</strong> Timber ≥ 19 mm; 6 mm ply @ ≤ 600 mm studs; 9.5 mm ply @ ≤ 1000 mm studs; or equivalent metal.</li>
+          <li><strong>Overhead:</strong> Gantry for overhead protection along public thoroughfares.</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <h3>NZBC F4 — Safety from falling</h3>
+        <ul>
+          <li><strong>Barrier:</strong> Continuous, appropriate height/rigidity/strength.</li>
+          <li><strong>Rails:</strong> Intermediate rails ≤ 460 mm openings; toeboard ≥ 225 mm.</li>
+          <li><strong>Edge distance:</strong> Rails ≤ 200 mm from platform edge.</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <h3>NZBC F5 — Construction & demolition hazards</h3>
+        <ul>
+          <li><strong>Protect:</strong> People/property from falling objects and other hazards.</li>
+          <li><strong>Barrier features:</strong> Difficult to climb; limited openings; no projecting gates; mark hazards.</li>
+          <li><strong>Routes:</strong> Safe routes under lifting/high work (screens/gantries).</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <h3>Scaffolding essentials</h3>
+        <ul>
+          <li><strong>Components:</strong> Standards, ledgers, transoms/putlogs, rails, toeboards, braces, baseplates/soleboards.</li>
+          <li><strong>Lifts:</strong> Height ≤ 2.1 m (first lift ≤ 3.0 m); headroom 1.8–2.1 m.</li>
+          <li><strong>Ties & bracing:</strong> Ties every second lift; bracing at 40–50°; plan bracing as required.</li>
+          <li><strong>Duty:</strong> Light 225 kg; Medium 450 kg; Heavy 675 kg; Special — designer SWL.</li>
+          <li><strong>Inspection:</strong> Weekly ≥ 5 m and after events; maintain scaffold register.</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <h3>Site safety & CPU</h3>
+        <ul>
+          <li><strong>PPE:</strong> Helmet, boots, harness, gloves, hearing; tag electrical gear.</li>
+          <li><strong>Hazard boards:</strong> Entry signage for hazards, controls, and access rules.</li>
+          <li><strong>CPU:</strong> Partial occupation; safety plan; life safety systems commissioned (FA, sprinklers, doors, lifts).</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <h3 class="mono">Quick dimensions & distances</h3>
+        <ul>
+          <li><strong>Hoarding height:</strong> 2.0 m min</li>
+          <li><strong>Chain-link grid:</strong> 50×50 mm max</li>
+          <li><strong>Post spacing:</strong> ≤ 2.5 m</li>
+          <li><strong>Bottom gap:</strong> ≤ 100 mm</li>
+          <li><strong>Toeboard:</strong> ≥ 225 mm</li>
+          <li><strong>Intermediate rail opening:</strong> ≤ 460 mm</li>
+          <li><strong>Lift height:</strong> ≤ 2.1 m (first ≤ 3.0 m)</li>
+          <li><strong>Headroom:</strong> 1.8–2.1 m</li>
+          <li><strong>Brace angle:</strong> 40–50°</li>
+          <li><strong>Electrical proximity (typical):</strong> up to 110 kV → 4.0 m; 220 kV → 6.0 m</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  // Smooth navigation
+  document.querySelectorAll('nav button[data-jump]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const t = document.querySelector(btn.getAttribute('data-jump'));
+      if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  // Search & tag filtering for notes
+  (function(){
+    const input = document.getElementById('searchInput');
+    const select = document.getElementById('tagSelect');
+    const clearBtn = document.getElementById('clearFilters');
+    const notes = Array.from(document.querySelectorAll('#notesContainer details.note'));
+
+    function applyFilters(){
+      const q = (input.value||'').toLowerCase().trim();
+      const tag = (select.value||'').toLowerCase().trim();
+      notes.forEach(n=>{
+        const text = n.textContent.toLowerCase();
+        const tags = (n.getAttribute('data-tags')||'').toLowerCase();
+        const matchQ = q ? text.includes(q) : true;
+        const matchTag = tag ? tags.includes(tag) : true;
+        n.style.display = (matchQ && matchTag) ? '' : 'none';
+      });
+    }
+    input.addEventListener('input', applyFilters);
+    select.addEventListener('change', applyFilters);
+    clearBtn.addEventListener('click', ()=>{
+      input.value = ''; select.value = ''; applyFilters();
+    });
+  })();
+
+  // Mind map links drawing and expand/collapse
+  (function(){
+    const linkSvg = document.getElementById('linkSvg');
+    const nodes = {
+      root: document.getElementById('node-root'),
+      scaf: document.getElementById('node-scaf'),
+      hoard: document.getElementById('node-hoard'),
+      safety: document.getElementById('node-safety'),
+      leg: document.getElementById('node-leg'),
+      cpu: document.getElementById('node-cpu')
+    };
+    const edges = [
+      ['root','scaf'], ['root','hoard'], ['root','safety'],
+      ['safety','leg'], ['safety','cpu']
+    ];
+
+    function rect(el){
+      const r = el.getBoundingClientRect();
+      return {x: r.left + window.scrollX, y: r.top + window.scrollY, w: r.width, h: r.height};
+    }
+    function draw(){
+      const appRect = document.getElementById('mindmapCanvas').getBoundingClientRect();
+      const W = appRect.width, H = appRect.height;
+      linkSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      linkSvg.innerHTML = '';
+      edges.forEach(([a,b])=>{
+        const ra = nodes[a].getBoundingClientRect();
+        const rb = nodes[b].getBoundingClientRect();
+        const ax = ra.left - appRect.left + ra.width/2;
+        const ay = ra.top - appRect.top + ra.height;
+        const bx = rb.left - appRect.left + rb.width/2;
+        const by = rb.top - appRect.top;
+        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+        const mx = (ax+bx)/2;
+        path.setAttribute('d', `M ${ax} ${ay} C ${mx} ${ay+30}, ${mx} ${by-30}, ${bx} ${by}`);
+        path.setAttribute('stroke', 'rgba(103,232,249,.6)');
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('fill', 'none');
+        linkSvg.appendChild(path);
+      });
+    }
+    draw();
+    window.addEventListener('resize', draw);
+
+    // Expand/collapse handlers
+    document.querySelectorAll('.mindmap .node button').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.getAttribute('data-expand');
+        const node = nodes[id];
+        const children = node.querySelector('.children');
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        if(expanded){
+          children.style.display = 'none';
+          btn.textContent = 'Expand';
+          btn.setAttribute('aria-expanded','false');
+        } else {
+          children.style.display = '';
+          btn.textContent = 'Collapse';
+          btn.setAttribute('aria-expanded','true');
+        }
+        draw();
+      });
+    });
+  })();
+
+  // Flashcards
+  (function(){
+    const data = [
+      {q:'Define hoarding (site fence).',a:'Temporary structure around construction works to protect public and provide security, dust/noise reduction.'},
+      {q:'When is a gantry required?',a:'When overhead protection is needed for public access adjacent to construction.'},
+      {q:'Minimum hoarding height?',a:'At least 2.0 m on side accessible to the public.'},
+      {q:'Max chain-link grid size?',a:'50×50 mm.'},
+      {q:'Post spacing for fences?',a:'Maximum of 2.5 m; bottom gap ≤ 100 mm.'},
+      {q:'Two plywood options for hoardings.',a:'6.0 mm exterior ply on ≤ 600 mm studs; 9.5 mm exterior ply on ≤ 1000 mm studs.'},
+      {q:'F4 barrier essentials.',a:'Continuity, appropriate height/rigidity/strength; prevent falling through.'},
+      {q:'Toeboard minimum height.',a:'225 mm above platform.'},
+      {q:'Intermediate rail opening limit.',a:'≤ 460 mm vertical opening.'},
+      {q:'Scaffolding definition.',a:'Temporary framework to support workers/materials; includes planks, couplers, fittings.'},
+      {q:'Core scaffold components.',a:'Standards, ledgers, transoms/putlogs, rails, toeboards, braces, baseplates, soleboards.'},
+      {q:'Duty ratings (light/med/heavy).',a:'225 kg / 450 kg / 675 kg per platform per bay.'},
+      {q:'First lift maximum.',a:'3.0 m.'},
+      {q:'Headroom requirement.',a:'Between 1.8 m and 2.1 m for regular walkway.'},
+      {q:'Tie frequency.',a:'At every second lift; near top lift as needed.'},
+      {q:'Bracing angle range.',a:'Between 40° and 50°.'},
+      {q:'Inspection frequency.',a:'Weekly for ≥ 5 m and after events affecting safety; keep register.'},
+      {q:'Electrical proximity rule.',a:'Generally ≥ 4 m; increases with voltage (e.g., 220 kV → 6 m).'},
+      {q:'Noise attenuation measures.',a:'Sound curtains, acoustic panels; integrate with hoardings for public areas.'},
+      {q:'CPU purpose.',a:'Allows public access pre-completion or during partial renovations with safety plan.'},
+      {q:'Life safety systems for CPU.',a:'Fire alarms, sprinklers, doors, lifts, smoke control, security access, communications.'},
+      {q:'Barrier climb prevention.',a:'Difficult to climb, limited openings, no projecting gates.'},
+      {q:'Catch screens use.',a:'Protect public where falling objects possible; above thoroughfares.'},
+      {q:'Plan bracing use.',a:'Provide stability when tie spacing is excessive; join standards via couplers.'},
+      {q:'Toe board function.',a:'Prevent tools/materials from being dislodged off platform.'},
+      {q:'Putlog definition.',a:'Transverse member supporting the working platform between ledgers/standards.'},
+      {q:'SWL meaning.',a:'Safe Working Load—max load per accepted engineering practice under normal conditions.'},
+      {q:'Hazard board role.',a:'Warns of site hazards, harms, controls; defines access requirements.'},
+      {q:'PPE essentials.',a:'Helmet, boots, harness, gloves, hearing protection; tagged equipment.'},
+      {q:'Gantry definition.',a:'Overhead protective structure along public access near active construction.'},
+      {q:'F5 objective.',a:'Safeguard people and property from construction/demolition site hazards.'},
+      {q:'Barrier marking requirement.',a:'Clearly marked where barrier presents hazard to traffic/passersby.'},
+      {q:'Working platforms per bay (≤13.5 m, light).',a:'Up to 4 working platforms.'},
+      {q:'Working platforms per bay (≤33 m, medium).',a:'1 platform.'},
+      {q:'When to use containment sheeting.',a:'Debris/noise control; requires engineered ties due to increased wind/dead loads.'},
+      {q:'Stair tower benefit.',a:'Safer multi-level access; guard openings; tie ladder access bays ≤ 4 m spacing.'},
+      {q:'Public route under lifting.',a:'Provide safe route with screens/gantries when lifting risks exist.'},
+      {q:'Elimination principle (work at height).',a:'Avoid working at height (e.g., assemble at ground) before relying on controls.'}
+    ];
+    const cont = document.getElementById('cards');
+    data.forEach(item=>{
+      const c = document.createElement('div');
+      c.className = 'card'; c.tabIndex = 0; c.setAttribute('role','button'); c.setAttribute('aria-label','Flashcard');
+      c.innerHTML = `
+        <div class="card-inner">
+          <div class="card-face front"><div><strong>Q:</strong> ${item.q}</div></div>
+          <div class="card-face back"><div><strong>A:</strong> ${item.a}</div></div>
+        </div>`;
+      c.addEventListener('click',()=> c.classList.toggle('flip'));
+      c.addEventListener('keypress',(e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); c.classList.toggle('flip'); } });
+      cont.appendChild(c);
+    });
+  })();
+
+  // Quiz (40 questions)
+  (function(){
+    const raw = [
+      {q:'What is the primary function of hoardings?', opts:['Decorative boundary','Prevent public access and enhance safety','Support scaffolding loads','Provide site drainage'], ans:1, exp:'Hoardings are site fences to prevent public access, improve public safety, and provide security/noise/dust control.'},
+      {q:'Minimum height for a hoarding/fence accessible to the public?', opts:['1.2 m','1.8 m','2.0 m','2.4 m'], ans:2, exp:'NZBC F5/AS1 requires fences/hoardings to extend at least 2.0 m in height.'},
+      {q:'Max grid size for chain-link used in site fences?', opts:['25×25 mm','50×50 mm','75×75 mm','100×100 mm'], ans:1, exp:'Acceptable chain-link netting has a maximum grid of 50×50 mm.'},
+      {q:'Post spacing for acceptable fence must be:', opts:['≤ 3.0 m','≤ 2.5 m','≤ 2.0 m','≤ 1.5 m'], ans:1, exp:'Post spacing shall be a maximum of 2.5 m.'},
+      {q:'Bottom gap between fence and ground must be:', opts:['≤ 200 mm','≤ 150 mm','≤ 100 mm','No limit'], ans:2, exp:'Gap between fence and ground must be no greater than 100 mm.'},
+      {q:'Which cladding is acceptable for hoardings?', opts:['6 mm interior MDF','6 mm exterior ply on ≤600 mm studs','3 mm aluminium composite without studs','Cloth mesh only'], ans:1, exp:'Exterior grade 6 mm plywood on studs ≤ 600 mm centres is acceptable; or 9.5 mm ply @ ≤ 1000 mm studs; or metal with comparable strength.'},
+      {q:'When is a gantry required?', opts:['Any rural site','When overhead protection for public access is needed','Only for demolition','Only for scaffolds over 33 m'], ans:1, exp:'Gantry provides overhead protection where public routes run under active work.'},
+      {q:'F4 requires barriers to be:', opts:['Portable and short','Continuous and of appropriate height/rigidity/strength','Transparent only','At least 3.0 m high'], ans:1, exp:'F4 mandates barrier continuity and performance against impact/static pressure.'},
+      {q:'Maximum vertical opening between rails on construction site barriers?', opts:['200 mm','300 mm','460 mm','600 mm'], ans:2, exp:'F4/AS1: max vertical opening is 460 mm.'},
+      {q:'Toeboard minimum height above platform?', opts:['100 mm','150 mm','225 mm','300 mm'], ans:2, exp:'F4/AS1 requires toeboards at least 225 mm high.'},
+      {q:'Scaffolding includes which items?', opts:['Only metal frames','Any temporary framework and associated planks/couplers/fittings','Only suspended stages','Only ladders'], ans:1, exp:'Definition covers temporary frameworks and items used for construction/erection/dismantling.'},
+      {q:'Light-duty platform SWL per bay is:', opts:['100 kg','225 kg','450 kg','675 kg'], ans:1, exp:'Light-duty: 225 kg per work platform per bay (incl. 100 kg point load).'},
+      {q:'Medium-duty platform SWL per bay is:', opts:['225 kg','450 kg','675 kg','800 kg'], ans:1, exp:'Medium-duty: 450 kg per platform per bay (incl. 150 kg point load).'},
+      {q:'Heavy-duty platform SWL per bay is:', opts:['450 kg','675 kg','800 kg','1000 kg'], ans:1, exp:'Heavy-duty: 675 kg per platform per bay (incl. 200 kg point load).'},
+      {q:'Maximum headroom for a regular scaffold walkway?', opts:['1.6 m','1.8 m','2.1 m','2.4 m'], ans:2, exp:'Headroom between 1.8 m and 2.1 m; the height of each lift ≤ 2.1 m.'},
+      {q:'First lift maximum height?', opts:['2.1 m','2.4 m','3.0 m','3.3 m'], ans:2, exp:'First lift may be up to 3.0 m; subsequent lifts ≤ 2.1 m.'},
+      {q:'Recommended bracing angle range?', opts:['10–20°','25–35°','40–50°','60–70°'], ans:2, exp:'Bracing typically between 40–50° for stability.'},
+      {q:'Tie placement rule for independent scaffolds?', opts:['Every lift','Only at base lift','Every second lift and near top as needed','No ties required'], ans:2, exp:'Ties every second lift; enhanced ties if netted/sheeted; near top as needed.'},
+      {q:'Inspection requirement for scaffolds over 5 m?', opts:['Monthly','Weekly and after safety-impacting events','No specific requirement','Only at completion'], ans:1, exp:'Weekly inspections and after events; scaffold register must be maintained.'},
+      {q:'Barrier climb prevention under F5 includes:', opts:['Smooth paint only','Difficult to climb design and limited openings','Warning tape','Higher color contrast'], ans:1, exp:'Barriers should be difficult to climb and have limited openings; gates not projecting beyond site.'},
+      {q:'Public protection under lifting operations requires:', opts:['Stop all work','Provide safe route via barriers/screens/gantries','Move public away permanently','Only signage'], ans:1, exp:'F5 requires safe routes when lifting creates risk of falling objects onto public areas.'},
+      {q:'Sound barriers may be required by:', opts:['Contractor preference','Resource consents','Supplier marketing','Weather alone'], ans:1, exp:'Resource consents may require sound barriers to protect neighbors/public.'},
+      {q:'E-wall panels are noted for:', opts:['Heavy weight','Poor acoustics','Lightweight, good acoustic properties, recyclable','Flammability'], ans:2, exp:'They combine acoustic performance with lightweight, easy install, and recyclability.'},
+      {q:'Electrical proximity rule for scaffolding near overhead lines:', opts:['Always ≥ 1 m','Always ≥ 2 m','Generally ≥ 4 m; higher distances for higher voltages','No limit if insulated'], ans:2, exp:'Typical safe distances increase with voltage (e.g., 110 kV → 4 m, 220 kV → 6 m).'},
+      {q:'CPU allows:', opts:['Full occupancy only','Public access before completion or during partial renovation','Skipping safety systems','Ignoring fire separations'], ans:1, exp:'CPU enables public access prior to full completion or during partial works with safety plan.'},
+      {q:'Systems that must be operational for CPU:', opts:['Only lights','Fire alarms, sprinklers, doors, lifts, smoke control, security access, comms, fire separations','Only sprinklers','Only communications'], ans:1, exp:'All listed life safety systems must be operational and commissioned.'},
+      {q:'Catch screens are used to:', opts:['Provide shade','Catch falling debris/materials above public areas','Store tools','Mark boundaries'], ans:1, exp:'Catch screens intercept falling objects over thoroughfares.'},
+      {q:'To prevent dislodgement of tools/materials from platforms:', opts:['Use textured paint','Install toeboards/screens between guardrail and toeboard','Increase platform width only','Ban hand tools'], ans:1, exp:'Screens or toeboards prevent items falling from platforms.'},
+      {q:'Putlog (bearer) is:', opts:['Vertical support','Horizontal member between ledgers/standards supporting platform','Diagonal brace','Baseplate'], ans:1, exp:'Putlog supports platform transversely between ledgers/standards.'},
+      {q:'SWL means:', opts:['Strong Welded Link','Safe Working Load','Standard Weight Limit','Scaffold Weight Level'], ans:1, exp:'Safe Working Load per accepted engineering practice.'},
+      {q:'Hazard boards should:', opts:['List only contractor names','Warn hazards, harms, controls, and access rules','Be hidden from public','Focus on advertising'], ans:1, exp:'They communicate hazards, potential harms, controls, and site access requirements.'},
+      {q:'Preferred hierarchy for working at height:', opts:['Minimize first','Isolate first','Eliminate where possible, then isolate/minimize','Use PPE only'], ans:2, exp:'Eliminate hazard where possible; otherwise isolate/minimize via group controls, then personal measures.'},
+      {q:'Working platforms per bay (≤13.5 m, heavy duty):', opts:['4','3','2','1'], ans:2, exp:'Heavy-duty up to 13.5 m → 2 platforms per bay.'},
+      {q:'Working platforms per bay (≤33 m, light duty):', opts:['4','3','2','1'], ans:2, exp:'Light-duty up to 33 m → 2 platforms per bay.'},
+      {q:'Containment sheeting considerations:', opts:['Reduces wind loads','No effect on structure','Increases wind/dead loads; require engineered ties and design approval','Only aesthetic'], ans:2, exp:'Sheeting increases loads; design must be approved by a competent person.'},
+      {q:'Stair tower safeguards:', opts:['No guarding needed','Guard openings; tie ladder access bays at standards ≤ 4 m','Remove ladders','Use single plank access'], ans:1, exp:'Guard and tie ladder access bays; follow manufacturer guidance.'},
+      {q:'Safe public route under lifting operations is required by:', opts:['Site rules only','NZBC F5 performance','Manufacturer manual','Noise code'], ans:1, exp:'F5 mandates safe routes where lifting creates falling object risk.'},
+      {q:'Intermediate rail opening limit (repeat check):', opts:['≤ 200 mm','≤ 300 mm','≤ 460 mm','≤ 600 mm'], ans:2, exp:'Ensure familiarity: ≤ 460 mm.'},
+      {q:'Toeboard height (repeat check):', opts:['≥ 150 mm','≥ 200 mm','≥ 225 mm','≥ 250 mm'], ans:2, exp:'Ensure familiarity: ≥ 225 mm.'}
+    ];
+    // Ensure 40 questions (we have 40 raw entries)
+    const totalEl = document.getElementById('total'); totalEl.textContent = raw.length.toString();
+    const questionsEl = document.getElementById('questions');
+    const scoreEl = document.getElementById('score');
+    const progressText = document.getElementById('progressText');
+    const progressBar = document.getElementById('progressBar');
+    const startBtn = document.getElementById('startQuiz');
+    const submitBtn = document.getElementById('submitQuiz');
+    const retryBtn = document.getElementById('retryQuiz');
+    const reviewBtn = document.getElementById('reviewQuiz');
+
+    let order = [...raw.keys()];
+    let selected = new Array(raw.length).fill(null);
+    let submitted = false;
+    let reviewMode = false;
+
+    function shuffle(arr){
+      for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
+      }
+      return arr;
+    }
+    function render(){
+      questionsEl.innerHTML = '';
+      order.forEach((idx, i)=>{
+        const q = raw[idx];
+        const wrap = document.createElement('div');
+        wrap.className = 'question';
+        wrap.setAttribute('role','group');
+        wrap.setAttribute('aria-labelledby', `q-${i}-title`);
+        const title = document.createElement('h4');
+        title.id = `q-${i}-title`;
+        title.textContent = `Q${i+1}. ${q.q}`;
+        wrap.appendChild(title);
+        const optsDiv = document.createElement('div');
+        optsDiv.className = 'options';
+        q.opts.forEach((opt, oi)=>{
+          const id = `q${i}-opt${oi}`;
+          const label = document.createElement('label');
+          label.className = 'opt';
+          label.setAttribute('for', id);
+          const radio = document.createElement('input');
+          radio.type = 'radio'; radio.name = `q${i}`; radio.id = id; radio.value = oi;
+          radio.setAttribute('aria-describedby', `q-${i}-title`);
+          radio.addEventListener('change', ()=>{
+            selected[i] = oi;
+            updateProgress();
+            if(reviewMode || submitted){
+              markOptions(i, q.ans);
+            }
+          });
+          const span = document.createElement('span');
+          span.textContent = opt;
+          label.appendChild(radio); label.appendChild(span);
+          optsDiv.appendChild(label);
+        });
+        wrap.appendChild(optsDiv);
+        const explain = document.createElement('div');
+        explain.className = 'explain';
+        if(submitted || reviewMode){
+          explain.textContent = `Explanation: ${q.exp}`;
+        } else {
+          explain.textContent = '';
+        }
+        wrap.appendChild(explain);
+        questionsEl.appendChild(wrap);
+      });
+      if(submitted || reviewMode){
+        // Mark answers
+        order.forEach((idx,i)=> markOptions(i, raw[idx].ans));
+      }
+      updateProgress();
+      updateScore();
+    }
+    function markOptions(qIndex, correctIndex){
+      const wrap = questionsEl.children[qIndex];
+      const labels = wrap.querySelectorAll('.opt');
+      labels.forEach((lab, oi)=>{
+        const input = lab.querySelector('input');
+        lab.style.borderColor = '';
+        lab.style.background = 'rgba(26,31,45,.6)';
+        if(submitted || reviewMode){
+          if(oi === correctIndex){
+            lab.style.borderColor = 'rgba(52,211,153,.6)';
+            lab.style.background = 'rgba(52,211,153,.10)';
+          }
+          if(selected[qIndex] === oi && oi !== correctIndex){
+            lab.style.borderColor = 'rgba(255,107,107,.7)';
+            lab.style.background = 'rgba(255,107,107,.10)';
+          }
+        }
+      });
+      const exp = wrap.querySelector('.explain');
+      exp.textContent = (submitted || reviewMode) ? `Explanation: ${raw[order[qIndex]].exp}` : '';
+    }
+    function updateProgress(){
+      const answered = selected.filter(x => x !== null).length;
+      const pct = Math.round((answered / raw.length) * 100);
+      progressText.textContent = `${pct}%`;
+      progressBar.style.width = `${pct}%`;
+    }
+    function updateScore(){
+      let s = 0;
+      order.forEach((idx,i)=>{
+        if(selected[i] === raw[idx].ans) s++;
+      });
+      scoreEl.textContent = s.toString();
+    }
+
+    startBtn.addEventListener('click', ()=>{
+      order = shuffle([...raw.keys()]);
+      selected = new Array(raw.length).fill(null);
+      submitted = false; reviewMode = false;
+      render();
+      window.scrollTo({top: document.getElementById('quiz').offsetTop - 80, behavior:'smooth'});
+    });
+    submitBtn.addEventListener('click', ()=>{
+      submitted = true; reviewMode = false;
+      render(); updateScore();
+    });
+    retryBtn.addEventListener('click', ()=>{
+      selected = new Array(raw.length).fill(null);
+      submitted = false; reviewMode = false;
+      render();
+    });
+    reviewBtn.addEventListener('click', ()=>{
+      reviewMode = true; submitted = false;
+      render();
+    });
+
+    // Initial render
+    render();
+  })();
+
+  // Print cheat sheet
+  document.getElementById('printCheat').addEventListener('click', ()=> window.print());
+</script>
+</body>
+</html>
